@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "aerialimagesdetection"
+version = "0.1.0"
+description = ""
+authors = ["SaraR-1 <s.romiti01@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+dvc = {extras = ["s3"], version = "^3.28.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
