@@ -1,0 +1,21 @@
+stages:
+  preprocessing:
+    cmd: python aerialimagesdetection/preprocess.py data/
+    deps:
+    - data/
+    outs:
+    - processed_data/
+  object_detection:
+    cmd: python aerialimagesdetection/detection.py processed_data/
+    deps:
+      - processed_data/
+    outs:
+      - output/objects.csv
+      - output/annotated_images
+  building_footprint:
+    cmd: python aerialimagesdetection/footprint.py processed_data/
+    deps:
+      - processed_data/
+    outs:
+      - output/footprints.csv
+      - output/masked_images
