@@ -1,0 +1,52 @@
+schema: '2.0'
+stages:
+  preprocessing:
+    cmd: python aerialimagesdetection/preprocess.py data/
+    deps:
+    - path: data/
+      hash: md5
+      md5: e43cde372ee87338adcc5e317f2b44c2.dir
+      size: 8539684
+      nfiles: 6
+    outs:
+    - path: processed_data/
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+  object_detection:
+    cmd: python aerialimagesdetection/detection.py processed_data/
+    deps:
+    - path: processed_data/
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    outs:
+    - path: output/annotated_images
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    - path: output/objects.csv
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+  building_footprint:
+    cmd: python aerialimagesdetection/footprint.py processed_data/
+    deps:
+    - path: processed_data/
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    outs:
+    - path: output/footprints.csv
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    - path: output/masked_images
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
