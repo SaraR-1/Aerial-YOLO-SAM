@@ -1,21 +1,21 @@
 stages:
-  preprocessing:
-    cmd: python aerialimagesdetection/preprocess.py data/
+  super_resolution:
+    cmd: python aerialimagesdetection/inference/super_resolution.py
     deps:
-    - data/
+    - data/raw_data
     outs:
-    - processed_data/
+    - data/upscaled_data/
   object_detection:
-    cmd: python aerialimagesdetection/detection.py processed_data/
+    cmd: python aerialimagesdetection/inference/detection.py
     deps:
-      - processed_data/
+      - data/raw_data
     outs:
-      - output/objects.csv
-      - output/annotated_images
+      - data/output/objects.csv
+      - data/output/annotated_images
   building_footprint:
-    cmd: python aerialimagesdetection/footprint.py processed_data/
+    cmd: python aerialimagesdetection/inference/footprint.py
     deps:
-      - processed_data/
+      - data/raw_data
     outs:
-      - output/footprints.csv
-      - output/masked_images
+      - data/output/footprints.csv
+      - data/output/masked_images
