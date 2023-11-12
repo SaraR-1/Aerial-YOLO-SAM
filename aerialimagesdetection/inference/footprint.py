@@ -1,6 +1,6 @@
 from pathlib import Path
 
-output = (Path(__file__).parents[1] / "output")
+output = (Path(__file__).parents[2] / "output")
 output.mkdir(parents=True, exist_ok=True)
 
 (output / "footprints.csv").touch()
