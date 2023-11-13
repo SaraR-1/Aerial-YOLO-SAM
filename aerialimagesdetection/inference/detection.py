@@ -3,10 +3,8 @@ import pandas as pd
 from pathlib import Path
 from PIL import Image
 import wandb
-from wandb.integration.ultralytics import add_wandb_callback
 
 # Initialize W&B run
-wandb.init(project="ultralytics", job_type="inference")
 output = (Path(__file__).parents[2] / "data" / "output")
 output.mkdir(parents=True, exist_ok=True)
 
@@ -20,7 +18,6 @@ objects_pd = pd.DataFrame(columns=["image_name", "class", "x1", "y1", "x2", "y2"
 # Load a model
 model = YOLO(model_path)  # load a pretrained model (recommended for training)
 # Add W&B callback for Ultralytics
-add_wandb_callback(model, enable_model_checkpointing=True)
 # Run inference on the source - save results to the output directory 
 results = model(source, stream=True)
 
