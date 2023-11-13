@@ -11,6 +11,7 @@ dvc = {extras = ["s3"], version = "^3.28.0"}
 torch = {version = ">=2.0.0, !=2.0.1, !=2.1.0"}
 ultralytics = "^8.0.208"
 wandb = "^0.16.0"
+opencv-contrib-python = "^4.8.1.78"
 
 
 [build-system]

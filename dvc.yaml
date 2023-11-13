@@ -4,7 +4,7 @@ stages:
     deps:
     - data/raw_data
     outs:
-    - data/upscaled_data/
+    - data/upscaled_data
   object_detection:
     cmd: python aerialimagesdetection/inference/detection.py
     deps:
