@@ -1,21 +1,43 @@
 stages:
-  super_resolution:
-    cmd: python aerialimagesdetection/inference/super_resolution.py
+  data_preparation:
+    cmd: python aerialimagesdetection/training/data_preparation.py
+    deps:
+      - data/xView/xView_train.geojson
+      - data/xView/train_images
+    outs:
+      - data/xView/images
+      - data/xView/labels
+  object_detection_training:
+    cmd: python aerialimagesdetection/training/detection.py
+    deps:
+      - yolov8m.pt
+      - data/xView/xView.yaml
+      - data/xView/images
+      - data/xView/labels
+    params:
+      - train
+    outs:
+      - YOLOv8/detection_model/weights/best.pt
+  preprocessing:
+    cmd: python aerialimagesdetection/inference/data_preprocessing.py
     deps:
     - data/raw_data
     outs:
-    - data/upscaled_data
+    - data/process_data
   object_detection:
     cmd: python aerialimagesdetection/inference/detection.py
     deps:
       - data/raw_data
+      - data/process_data
     outs:
       - data/output/objects.csv
       - data/output/annotated_images
-  building_footprint:
+  footprint:
     cmd: python aerialimagesdetection/inference/footprint.py
     deps:
-      - data/raw_data
+      - data/process_data
+      - YOLOv8/detection_model/weights/best.pt
+    params:
+      - objects_name
     outs:
-      - data/output/footprints.csv
       - data/output/masked_images
