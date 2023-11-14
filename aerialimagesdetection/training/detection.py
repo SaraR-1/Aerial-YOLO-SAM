@@ -5,8 +5,9 @@ from dvc.api import params_show
 params = params_show(stages='object_detection_training')["train"]
 
 # Load a model
-model = YOLO('yolov8m.pt', )  # load a pretrained model (recommended for training)
+  # load a pretrained model (recommended for training)
 parent_folder = Path(__file__).parents[2] 
+model = YOLO("yolov8m.pt")
 config_path = parent_folder / "data" / "xView" / "xView.yaml"
 output = parent_folder / "YOLOv8"
 (output / "detection_model").mkdir(parents=True, exist_ok=True)

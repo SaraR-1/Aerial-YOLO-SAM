@@ -3,17 +3,21 @@ stages:
     cmd: python aerialimagesdetection/training/data_preparation.py
     deps:
       - data/xView/xView_train.geojson
-      - data/xView/train_images
+      - data/xView/images
     outs:
+      - data/xView/labels
+  tiling:
+    cmd : python aerialimagesdetection/training/tiling.py
+    deps:
       - data/xView/images
       - data/xView/labels
+    outs:
+      - data/xView/tiled
   object_detection_training:
     cmd: python aerialimagesdetection/training/detection.py
     deps:
-      - yolov8m.pt
       - data/xView/xView.yaml
-      - data/xView/images
-      - data/xView/labels
+      - data/xView/tiled
     params:
       - train
     outs:
@@ -23,20 +27,21 @@ stages:
     deps:
     - data/raw_data
     outs:
-    - data/process_data
+    - data/processed_data
   object_detection:
     cmd: python aerialimagesdetection/inference/detection.py
     deps:
       - data/raw_data
-      - data/process_data
+      - data/processed_data
+      - YOLOv8/detection_model/weights/best.pt
     outs:
       - data/output/objects.csv
       - data/output/annotated_images
   footprint:
     cmd: python aerialimagesdetection/inference/footprint.py
     deps:
-      - data/process_data
-      - YOLOv8/detection_model/weights/best.pt
+      - data/processed_data
+      - data/output/objects.csv
     params:
       - objects_name
     outs:

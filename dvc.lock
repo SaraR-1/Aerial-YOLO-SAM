@@ -3,6 +3,15 @@ stages:
   object_detection:
     cmd: python aerialimagesdetection/inference/detection.py
     deps:
+    - path: YOLOv8/detection_model/weights/best.pt
+      hash: md5
+      md5: 9115097843b6a20515a2dc4e7a28036f
+      size: 311063527
+    - path: data/processed_data
+      hash: md5
+      md5: 96e98f2ec788ae8270fca197d89b1d3b.dir
+      size: 12484525
+      nfiles: 5
     - path: data/raw_data
       hash: md5
       md5: e43cde372ee87338adcc5e317f2b44c2.dir
@@ -11,13 +20,13 @@ stages:
     outs:
     - path: data/output/annotated_images
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 8729f258d728096ae6b3385b00d2f3d6.dir
+      size: 13238995
+      nfiles: 10
     - path: data/output/objects.csv
       hash: md5
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 4cbf015ad86ad6c1b51c5984279f5ab2
+      size: 55428
   building_footprint:
     cmd: python aerialimagesdetection/inference/footprint.py
     deps:
@@ -50,3 +59,54 @@ stages:
       md5: e43cde372ee87338adcc5e317f2b44c2.dir
       size: 8539684
       nfiles: 6
+  data_preparation:
+    cmd: python aerialimagesdetection/training/data_preparation.py
+    deps:
+    - path: data/xView/images
+      hash: md5
+      md5: 36d85084ea1ece675a9de5b4e73c73cd.dir
+      size: 24678282984
+      nfiles: 849
+    - path: data/xView/xView_train.geojson
+      hash: md5
+      md5: 4a583147254201627285633c11cb600d
+      size: 372241031
+    outs:
+    - path: data/xView/labels
+      hash: md5
+      md5: 29c22f1291a02d94a4d7e86061dcbfc1.dir
+      size: 22414870
+      nfiles: 824
+  preprocessing:
+    cmd: python aerialimagesdetection/inference/data_preprocessing.py
+    deps:
+    - path: data/raw_data
+      hash: md5
+      md5: e43cde372ee87338adcc5e317f2b44c2.dir
+      size: 8539684
+      nfiles: 6
+    outs:
+    - path: data/processed_data
+      hash: md5
+      md5: 96e98f2ec788ae8270fca197d89b1d3b.dir
+      size: 12484525
+      nfiles: 5
+  tiling:
+    cmd: python aerialimagesdetection/training/tiling.py
+    deps:
+    - path: data/xView/images
+      hash: md5
+      md5: 36d85084ea1ece675a9de5b4e73c73cd.dir
+      size: 24678282984
+      nfiles: 849
+    - path: data/xView/labels
+      hash: md5
+      md5: 29c22f1291a02d94a4d7e86061dcbfc1.dir
+      size: 22414870
+      nfiles: 824
+    outs:
+    - path: data/xView/tiled
+      hash: md5
+      md5: 5201ee9406e680f55ef8db4abd78a3a7.dir
+      size: 720149506
+      nfiles: 32256

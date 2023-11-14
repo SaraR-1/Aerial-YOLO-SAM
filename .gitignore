@@ -1,3 +1,14 @@
 /data/output
 /data/upscaled_data
 /data/raw_data
+/data/xView/labels
+/data/xView/tiled
+/data/xView/images
+/data/xView/xView_train.geojson
+/data/processed_data
+/YOLOv8
+/runs
+/wandb
+sam_b.p
+yolov8m.pt
+yolov8n.pt
