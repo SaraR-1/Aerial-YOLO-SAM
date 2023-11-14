@@ -1,0 +1,7 @@
+train:
+  epochs: 3
+  batch: 4
+  imgsz: 640
+  val: False
+
+objects_name: ["Building"]
