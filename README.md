@@ -1,15 +1,43 @@
 # AerialML
-This project aims to detect and segment building from satellite and aerial imagery.
+This project aims to detect and segment buildings (and vehicles/aircraft as desired) from aerial imagery.
 
-Specifically:
-- Import satellite or aerial images from the designated data directory.
-- Conduct image preprocessing to optimize data quality (enhance contrast).
-- Train a YOLOv8 model on xView dataset to detect major types of objects. A preprocessing on xView dataset is necessary to better represent our test data.
+Specifically, the library is pipeline composed of the following steps:
+
+Training:
+- Load a training set of data - xView.
+- Tile the training set images, increasing the pixels/meter downstream.
+- Train a YOLOv8 model on this dataset to detect major types of objects.
+
+Inference:
+- Conduct image preprocessing to optimize input data quality (enhance contrast).
 - Detect major types of objects such as buildings, cars or airplanes on our test dataset.
-- Employ detection techniques to identify the precise building (or other object!) footprints. Here we use Meta's Segment Anything Model (SAM).
+- Employ Segment Anything Model as a "prompt-based" segmentation technique.
 - Generate a GeoJSON file containing polygon representations of the detected the object footprints.
 - Create new images with the object footprints superimposed for visualization.
 
+The pipeline looks like this:
+
+```mermaid
+flowchart TD
+        node1[("Input Data")]
+        node2[("xView Data")]
+        node4["Data Preparation"]
+        node5["Segmentation"]
+        node6["Object Detection"]
+        node7["Object Detection Training"]
+        node8["Pre-processing"]
+        node9["Image Tiling"]
+        node1-->node6
+        node1-->node8
+        node2-->node4
+        node2-->node9
+        node4-->node9
+        node6-->node5
+        node7-->node6
+        node8-->node5
+        node8-->node6
+        node9-->node7
+```
 
 ## Installation
 To use the code in this project, you'll need to create a Python environment, clone the repository and download the data using DVC.
@@ -34,8 +62,11 @@ Where:
 - aws_access_key_id - The access key for your AWS account.
 - aws_secret_access_key - The secret key for your AWS account.
 
-## Run the code
-To run the code you can use DVC as:
+Please send me an email for these credentials.
+
+## Running the Code
+
+To run the entire pipeline you can use DVC as:
 ```
 dvc repro
 ```
