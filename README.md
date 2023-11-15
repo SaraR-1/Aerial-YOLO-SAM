@@ -15,7 +15,7 @@ Inference:
 - Generate a GeoJSON file containing polygon representations of the detected the object footprints.
 - Create new images with the object footprints superimposed for visualization.
 
-The pipeline looks like this:
+An illustration of the pipeline:
 
 ```mermaid
 flowchart TD
