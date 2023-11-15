@@ -5,28 +5,28 @@ stages:
     deps:
     - path: YOLOv8/detection_model/weights/best.pt
       hash: md5
-      md5: 9115097843b6a20515a2dc4e7a28036f
-      size: 311063527
+      md5: a1c8cc9125ecb74841f79631a3dac237
+      size: 207513471
     - path: data/processed_data
       hash: md5
-      md5: 96e98f2ec788ae8270fca197d89b1d3b.dir
-      size: 12484525
-      nfiles: 5
+      md5: 6b1c66fe7936d84dd96137f686dccfdb.dir
+      size: 12827159
+      nfiles: 6
     - path: data/raw_data
       hash: md5
-      md5: e43cde372ee87338adcc5e317f2b44c2.dir
+      md5: 17a76df3c166aaa6f4244351afa14fcc.dir
       size: 8539684
       nfiles: 6
     outs:
     - path: data/output/annotated_images
       hash: md5
-      md5: 8729f258d728096ae6b3385b00d2f3d6.dir
-      size: 13238995
-      nfiles: 10
+      md5: 4ea463be4ea92150c76421b982b22f7a.dir
+      size: 13180270
+      nfiles: 12
     - path: data/output/objects.csv
       hash: md5
-      md5: 4cbf015ad86ad6c1b51c5984279f5ab2
-      size: 55428
+      md5: d78b3772bf519f521b7bbb41c64fbb4b
+      size: 91452
   building_footprint:
     cmd: python aerialimagesdetection/inference/footprint.py
     deps:
@@ -64,9 +64,9 @@ stages:
     deps:
     - path: data/xView/images
       hash: md5
-      md5: 36d85084ea1ece675a9de5b4e73c73cd.dir
-      size: 24678282984
-      nfiles: 849
+      md5: 933bfb1d055721ed89875614bbb6cc6d.dir
+      size: 1227792473
+      nfiles: 846
     - path: data/xView/xView_train.geojson
       hash: md5
       md5: 4a583147254201627285633c11cb600d
@@ -82,23 +82,23 @@ stages:
     deps:
     - path: data/raw_data
       hash: md5
-      md5: e43cde372ee87338adcc5e317f2b44c2.dir
+      md5: 17a76df3c166aaa6f4244351afa14fcc.dir
       size: 8539684
       nfiles: 6
     outs:
     - path: data/processed_data
       hash: md5
-      md5: 96e98f2ec788ae8270fca197d89b1d3b.dir
-      size: 12484525
-      nfiles: 5
+      md5: 6b1c66fe7936d84dd96137f686dccfdb.dir
+      size: 12827159
+      nfiles: 6
   tiling:
     cmd: python aerialimagesdetection/training/tiling.py
     deps:
     - path: data/xView/images
       hash: md5
-      md5: 36d85084ea1ece675a9de5b4e73c73cd.dir
-      size: 24678282984
-      nfiles: 849
+      md5: 933bfb1d055721ed89875614bbb6cc6d.dir
+      size: 1227792473
+      nfiles: 846
     - path: data/xView/labels
       hash: md5
       md5: 29c22f1291a02d94a4d7e86061dcbfc1.dir
@@ -107,6 +107,52 @@ stages:
     outs:
     - path: data/xView/tiled
       hash: md5
-      md5: 5201ee9406e680f55ef8db4abd78a3a7.dir
-      size: 720149506
-      nfiles: 32256
+      md5: 32500bc63d8893881853f033ff24e361.dir
+      size: 721346100
+      nfiles: 32257
+  object_detection_training:
+    cmd: python aerialimagesdetection/training/detection.py
+    deps:
+    - path: data/xView/tiled
+      hash: md5
+      md5: 32500bc63d8893881853f033ff24e361.dir
+      size: 721346100
+      nfiles: 32257
+    - path: data/xView/xView.yaml
+      hash: md5
+      md5: f6e82999c3ac289036b8f632bbf8d697
+      size: 855
+    params:
+      params.yaml:
+        train:
+          epochs: 50
+          batch: 4
+          imgsz: 640
+          val: true
+    outs:
+    - path: YOLOv8/detection_model/weights/best.pt
+      hash: md5
+      md5: a1c8cc9125ecb74841f79631a3dac237
+      size: 207513471
+  footprint:
+    cmd: python aerialimagesdetection/inference/footprint.py
+    deps:
+    - path: data/output/objects.csv
+      hash: md5
+      md5: d78b3772bf519f521b7bbb41c64fbb4b
+      size: 91452
+    - path: data/processed_data
+      hash: md5
+      md5: 6b1c66fe7936d84dd96137f686dccfdb.dir
+      size: 12827159
+      nfiles: 6
+    params:
+      params.yaml:
+        objects_name:
+        - Building
+    outs:
+    - path: data/output/masked_images
+      hash: md5
+      md5: a91a61b7ed9dc91974414db86f1a0116.dir
+      size: 4480351
+      nfiles: 10
