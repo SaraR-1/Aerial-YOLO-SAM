@@ -29,29 +29,33 @@ def process_images(model, source_images, output_dir, objects_pd, prefix=""):
         
     return objects_pd
 
-# Initialize paths
-base_path = Path(__file__).parents[2]
-data_path = base_path / "data"
-output_path = data_path / "output"
-output_path.mkdir(parents=True, exist_ok=True)
-annotated_images_path = output_path / "annotated_images"
-annotated_images_path.mkdir(parents=True, exist_ok=True)
+def main():
+    # Initialize paths
+    base_path = Path(__file__).parents[2]
+    data_path = base_path / "data"
+    output_path = data_path / "output"
+    output_path.mkdir(parents=True, exist_ok=True)
+    annotated_images_path = output_path / "annotated_images"
+    annotated_images_path.mkdir(parents=True, exist_ok=True)
 
-model_path = base_path / "YOLOv8" / "detection_model" / "weights" / "best.pt"
+    model_path = base_path / "YOLOv8" / "detection_model" / "weights" / "best.pt"
 
-# Load model
-model = YOLO(model_path)
+    # Load model
+    model = YOLO(model_path)
 
-# Data sources
-source_processed = list((data_path / "processed_data").glob("*.jpeg"))
-source_raw = list((data_path / "raw_data").glob("*.jpeg"))
+    # Data sources
+    source_processed = list((data_path / "processed_data").glob("*.jpeg"))
+    source_raw = list((data_path / "raw_data").glob("*.jpeg"))
 
-# DataFrame for storing results
-objects_pd = pd.DataFrame(columns=["image_name", "image_type", "class", "x1", "y1", "x2", "y2"])
+    # DataFrame for storing results
+    objects_pd = pd.DataFrame(columns=["image_name", "image_type", "class", "x1", "y1", "x2", "y2"])
 
-# Process images
-objects_pd = process_images(model, source_processed, annotated_images_path, objects_pd, "processed")
-objects_pd = process_images(model, source_raw, annotated_images_path, objects_pd, "raw")
+    # Process images
+    objects_pd = process_images(model, source_processed, annotated_images_path, objects_pd, "processed")
+    objects_pd = process_images(model, source_raw, annotated_images_path, objects_pd, "raw")
 
-# Save results
-objects_pd.to_csv(output_path / "objects.csv", index=False)
+    # Save results
+    objects_pd.to_csv(output_path / "objects.csv", index=False)
+
+if __name__ == "__main__":
+    main()

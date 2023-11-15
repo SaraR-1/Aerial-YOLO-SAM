@@ -58,5 +58,6 @@ def convert_labels(fname):
                 except Exception as e:
                     breakpoint()
 
-dataset_root_dir = Path(__file__).parents[2] / "data" / "xView"
-convert_labels(dataset_root_dir / 'xView_train.geojson')
+if __name__ == "__main__":
+    dataset_root_dir = Path(__file__).parents[2] / "data" / "xView"
+    convert_labels(dataset_root_dir / 'xView_train.geojson')
